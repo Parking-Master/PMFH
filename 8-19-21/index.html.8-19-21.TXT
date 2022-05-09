@@ -1,0 +1,172 @@
+<!--
+> Copyright (c) 2021 Parking Master
+> All rights reserved.
+> LICENSE MIT https://github.com/Parking-Master/Parking-Master/blob/main/LICENSE.md
+-->
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+         <title>Parking Master</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="default-style" content="Game is temporarily closed | Parking Master|stylesheet/css">
+    <meta name="keywords" content="parkingmaster, Parking Master, w3spaces, w3spaces.com, Web-games, fun car game"/>
+    <meta name="subject" content="Parking Master | Fun web-game!">
+    <meta name="url" content="https://parkingmaster.w3spaces.com/">
+    <meta name="author" content="Parking Master, parkingmaster@email.com">
+    <meta name="owner" content="Parking Master games">
+    <meta property="og:title" content="Parking Master > Fun Webgame" />
+    <meta property="og:url" content="https://parkingmaster.w3spaces.com/" />
+    <meta property="og:image" content="https://user-images.githubusercontent.com/85320577/125539201-f967db44-f34e-4a43-a51a-b1b84708dce4.jpeg" />
+    <meta property="og:description" content="Play free > No ads > Over 10 levels > Tips and unlocks" />
+    <meta property="og:locale" content="en_US" />
+   <link rel="icon" href="https://user-images.githubusercontent.com/85320577/125539201-f967db44-f34e-4a43-a51a-b1b84708dce4.jpeg">
+   <link rel="stylesheet" type="text/css" href="https://external-testing-3.w3spaces.com/indexstyles.css">
+   <style type="text/css">
+      kbd {
+      background-color: rgb(190, 190, 190);
+      border: 1px solid #121;
+      border-radius: 2px;
+      box-shadow: 2px 2px gray;
+      color: black;
+      font-family: sans-serif;
+      font-weight: 200;
+      padding: 3px;
+      cursor: pointer;
+      transition: all ease 0.1s;
+      }
+      kbd:active {
+      box-shadow: -1px -1px gray;
+      }
+      body {
+        font-family: sans-serif;
+      }
+      .swal-overlay {
+        z-index: 99999;
+      }
+   </style>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://external-testing-3.w3spaces.com/swifty.js"></script>
+</head>
+   <h3 style="z-index: 9999; background-color: white; border-top: 5px solid white; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 300px; overflow-x: auto; position: fixed !important; left: 50%; margin-left: -150px;" id="header-style">Parking Master</h3>
+<div class="banner-wrapper" style="text-align: center; border-bottom: 2px solid black; width: 100%; margin: 0; position: fixed; left: 0; top: 0; z-index: 1; background-color: white; height: 5%;">
+<p style="position:fixed;left:50%;margin-left:-12%;margin-top:8px;">The new offline browser-app is out now! <span><kbd>Get in now</kbd></span></p>
+</div>
+<body onload="playAudio(); startIdle();">
+<p id="paraGraph1">Welcome</p>
+<script>
+window.onload = function() {
+  updateAlert();
+}
+</script>
+<div id="aud_wdgt-html8184">
+<!-- \STARTPAGE AUDIO WIDGET.html\ -->
+<audio id="myAudio" loop>
+  <source src="https://user-images.githubusercontent.com/85320577/125461243-a9dd91b0-0eb5-4e4b-8f02-a1fd252fa5f2.mov">
+  Your browser does not support the audio element.
+</audio>
+<a id="pause-audio_9474" href="javascript:playAudio();"><img id="audio-play_9572" src="https://user-images.githubusercontent.com/85320577/125479052-7decfff4-fd49-4a4a-996f-7f190d3bfdc5.png" width="5%" /></a>
+<style>
+#audio-play_9572 {
+    background-color: transparent;
+}
+#audio-play_9573 {
+    background-color: transparent;
+}
+</style>
+<!-- /END OF STARTPAGE AUDIO WIDGET/ -->
+</div>
+<span style="display: none;" id="aval-score"></span>
+  <div id="buttons">
+<div id="button">
+    <button style="width: 200px; text-align: center; position: relative; left: 138%; top: 1px;" class="button" type="button" title="Start the game" onclick="setTimeout(function(){replaceContent();}, 2000);fadeTrans();">Start</button>
+
+<form action="https://parkingmaster.w3spaces.com/trending-games.html">
+    <input style="width: 100px; position: absolute; left: 180%; top: 1px;" class="button" type="submit" title="Trending games for your entertainment" value="Trending" />
+</form>
+<form action="mod-downloads.html" id="mods">
+    <input style="font-weight: 600; width: 70px; position: absolute; left: 201%; top: 1px;" class="button" type="submit" title="Exchange awesome mods with your points" value="Mods&#128498" />
+</form>
+    <button style="width: 70px; text-align: center; position: absolute; left: 216%; top: 1px;" class="button" type="button" title="Guide or how to play" onclick="">Help</button>
+<form action="https://github.com/Parking-Master" target="_BLANK">
+    <button type="submit" style="font-weight: 600; width: 40px; position: absolute; left: 231%; top: 1px;" class="button" title="Github"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></button>
+</form>
+    <button style="font-weight: 600; width: 40px; position: absolute; left: 240%; top: 1px;" class="button" type="button" title="Apply for a free job" onclick="jobAppli()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg></button>
+
+</div>
+</div>
+<span id="iframe4"></span>
+<img style="position: relative: left: 50%;" class="startPage" src="https://user-images.githubusercontent.com/85320577/123474722-620b1100-d5c8-11eb-9085-adca15aa0e86.jpeg" alt="Car Drifting" width="600px" height="400px" />
+<span style="display: none;" id="url"></span>
+<div>
+  <input type="text" name="update" id="update" placeholder="Yes for update No for no" style=" display: none" value="Yes" />
+
+  <div style="display: none;">
+<div id="user"></div>
+<button id="save">Done</button>
+</div>
+<script>
+  document.getElementsByTagName("kbd")[0].onclick = function() {
+    openBookmarkModal1();
+  }
+  document.getElementById("user").innerHTML = 'Not updated';
+if (localStorage["user"])
+{
+    var user = localStorage["user"];
+    document.getElementById("user").innerHTML = user;
+}
+else {
+
+}
+
+document.getElementById("save").addEventListener("click", function()
+    {
+        var user = document.getElementById("user").innerHTML;
+        //localStorage["user"] = user ;
+        localStorage.setItem("user", user);
+    } , false);
+</script>
+<input type="text" id="text_input_copy" style="background-color: transparent; color: transparent; border: none;" value="javascript:setTimeout(function(){window.location.href = 'Parking Master';}, 0);var page ='<html><head><title>Parking Master</title><meta charset=\'UTF-8\'><meta name=\'viewport\' content=\'width=device-width\'></head><body><iframe oncontextmenu=\'return false;\' src=\'https://parkingmaster.w3spaces.com\' style=\'position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;\'>Your browser doesn\'t support iframes</iframe></body></html>'; document.open();document.write(page);document.close();" />
+<style>
+#text_input_copy::selection {
+  background-color: transparent;
+  color: transparent;
+  border: none;
+  outline: none;
+}
+#text_input_copy:focus {
+  outline: none;
+}
+</style>
+<script>
+function fadeTrans() {
+var transition = document.createElement('div');
+transition.className = "transition";
+transition.style.width = "100%";
+transition.style.height = "100%";
+transition.style.position = "absolute";
+transition.style.left = "0";
+transition.style.top = "0";
+transition.style.backgroundColor = "#111";
+transition.style.opacity = "0";
+transition.style.zIndex = "9999";
+
+var transitionStyle = document.createElement('style');
+var innerCSS = document.createTextNode('.transition {vertical-align: top;}');
+setTimeout(function(){  
+document.getElementsByClassName("transition")[0].style.transition =  "opacity 0.8s";
+document.getElementsByClassName("transition")[0].style.WebkitTransition = "opacity 0.8s";
+document.getElementsByClassName("transition")[0].style.opacity =  "0";}, 500);
+transitionStyle.appendChild(innerCSS);
+document.body.appendChild(transition);
+setTimeout(function(){ document.getElementsByClassName("transition")[0].style.opacity = "1";
+}, 1000);
+}
+</script>
+
+<script type="text/javascript" src="https://external-testing-3.w3spaces.com/laptop-version-for-index.js"></script>
+
+<script type="text/javascript" src="https://external-testing-3.w3spaces.com/indexscript.js"></script>
+
+</body>
+</html>
