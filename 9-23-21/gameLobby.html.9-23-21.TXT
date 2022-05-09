@@ -1,0 +1,804 @@
+<!--
+> Copyright (c) 2021 Parking Master
+> All rights reserved.
+> LICENSE MIT https://github.com/Parking-Master/Parking-Master/blob/main/LICENSE.md
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Multiplayer / Parking Master</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+        <meta name="robots" content="noindex">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.28.2.min.js"></script>
+<script src='https://cdn.jsdelivr.net/gh/rstacruz/nprogress/nprogress.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/rstacruz/nprogress/nprogress.css'/>
+    </head>
+<body>
+<input id="input" placeholder="message" hidden />
+<div id="blue-banner"><input type="button" id="input-button-submit" value="Drive" /></div>
+<div id="red-banner"><input type="button" id="input-button-submit-2" value="Drive" /></div>
+<div id="box" hidden></div>
+<div hidden>
+<div id="user_id1"></div>
+<button id="save">Done</button>
+</div>
+<div id="lobby-name" hidden></div>
+<div id="token" hidden></div>
+<button id="pubnub-publish-msg-token" hidden>tkn</button>
+<!--<input readonly="readonly" type="number" id="stopwatch-player-1" value="0." />--><whitespace></whitespace><input readonly="readonly" type="number" id="stopwatch-player-1-interval" value="0" />
+<div id="user_token_1"></div>
+<input id="timer-for-game-start" type="number" readonly="readonly" />
+<div id="console">
+
+<span style="cursor: pointer; transform: scale(1.2,1.2);" onclick="document.getElementById('console').style.display = 'none';">&times;</span><input list="debug-options" type="text" id="console-command-line-interface" />
+<datalist id="debug-options">
+    <option value="alert()">
+    <option value="window.alert()">
+    <option value="console.log()">
+    <option value="console.info()">
+    <option value="console.warn()">
+    <option value="console.error()">
+    <option value="console.debug()">
+    <option value="window.setTimeout()">
+    <option value="window.setInterval()">
+    <option value="setInterval()">
+    <option value="setTimeout()">
+    <option value="remove()">
+    <option value="clear()">
+    <option value="click()">
+    <option value="style">
+    <option value="innerHTML">
+    <option value="innerText">
+    <option value="submit()">
+    <option value="document">
+    <option value="documentElement">
+    <option value="window">
+    <option value="getElementById()">
+    <option value="getElementsByClassName()[0]">
+    <option value="getElementsByTagName()[0]">
+    <option value="getElementsByName()">
+    <option value="querySelector()">
+    <option value="querySelectorAll()">
+    <option value="getElementsByTagNameNS()">
+</datalist>
+<br>
+<br>
+    <div class="console-content">
+
+    </div>
+</div>
+<section class="menu">
+  <ul class="menu-options">
+    <li onclick="if(confirm('Please confirm you want to disconnect the session.')){history.go(-1);}" class="menu-option">Back</li>
+    <li onclick="if(confirm('Please confirm you want to disconnect the session.')){location.reload();}" class="menu-option">Reload</li>
+    <li onclick="downloadPage('prenamed');" class="menu-option">Save</li>
+    <li onclick="downloadPage('custom');" class="menu-option">Save As</li>
+    <li onclick="document.getElementById('console').style.display='block';" class="menu-option">Debugger</li>
+    <li onclick="document.querySelector('section').style.display='none';document.getElementById('u').style.left='50px';setTimeout(function(){document.getElementById('currentElementHTML').value='';},100);" onmouseup="setTimeout(function" onmouseout="document.getElementById('u').style.left='50px';" class="menu-option" id="inspect-element">This element</li>
+  </ul>
+</section>
+<style>
+html,body {overflow:hidden;}
+input[type=button] {
+    cursor: pointer;
+}
+@font-face {
+    font-family: 'Sansation';
+    src: url(https://db.onlinewebfonts.com/t/00370d92f1b404768d34ac7dc664289e.ttf);
+}
+body {
+    font-family: 'Sansation', 'Roboto', Arial;
+    font-size: 1vw;
+}
+#hyperlinkcancelswalcanceldonotconfirm {
+    color: #4285F4;
+    text-decoration: none;
+    border-bottom: 1px solid #4285F4;
+}
+#hyperlinkcancelswalcanceldonotconfirm:active {
+    border-bottom: none;
+    text-decoration: underline;
+}
+#sharethislinkwithfriends {
+    color: #4285F4;
+    text-decoration: none;
+    border-bottom: 1px solid #4285F4;
+    margin-left: -10px;
+    margin-right: 10px;
+}
+#sharethislinkwithfriends:active {
+    border-bottom: none;
+    text-decoration: underline;
+}
+body {
+    font-family: 'Sansation', Arial;
+    height: 50%;
+}
+#blue-banner {
+    z-index: 9999;
+    background-color: #0000FF;
+    margin: 0px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: 10%;
+}
+#red-banner {
+    z-index: 9999;
+    background-color: #FF0000;
+    margin: 0px;
+    position: relative;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: 10%;
+}
+body {
+    background-color: white;
+}
+.Offline-no-user {
+    background-color: white;
+    opacity: 0.8;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+}
+canvas {
+    transform: scale(0.8, 0.8);    
+}
+#canvas1 {
+    position: absolute;
+    border: 4px solid #0000FF;
+    left: 40%;
+    top: 50%;
+    margin-top: -200px;
+    margin-left: -30%;
+}
+#canvas2 {
+    position: absolute;
+    border: 4px solid #FF0000;
+    left: 80%;
+    top: 50%;
+    margin-top: -200px;
+    margin-left: -25%;
+}
+#stopwatch-player-1 {
+  border: none;
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  padding: none;
+  width: auto;
+  z-index: 99999;
+  position: absolute;
+  top: 20%;
+  background-color: transparent;
+  outline: none;
+}
+#stopwatch-player-1:focus {
+    outline: none;
+}
+#stopwatch-player-1-interval {
+  border: none;
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  padding: none;
+  width: auto;
+  z-index: 99999;
+  position: absolute;
+  top: 20%;
+  background-color: transparent;
+  outline: none;
+}
+#stopwatch-player-1-interval:focus {
+    outline: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+whitespace {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: auto;
+}
+#input-button-submit {
+  color: white;
+  background-color: #0000FF;
+  border: 2px solid white;
+  border-radius: 4px;
+  z-index: 9999;
+  padding: 5px;
+  position: relative;
+  left: 10%;
+  top: -50%;
+  margin-left: -1.7vw;
+  margin-top: 3.9vw;
+  width: 3.2552083333333335vw;
+  height: 2.1158854166666665vw;
+}
+#input-button-submit-2 {
+  color: white;
+  background-color: #FF0000;
+  border: 2px solid white;
+  border-radius: 4px;
+  z-index: 9999;
+  padding: 5px;
+  position: relative;
+  left: 10%;
+  top: 50%;
+  margin-left: -1.7vw;
+  margin-top: -1.0481770833333335vw;
+  width: 3.2552083333333335vw;
+  height: 2.1158854166666665vw;
+}
+@font-face {
+    font-family: 'Countdown';
+    src: url(revenue.ttf);
+}
+#timer-for-game-start {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    overflow: auto;
+    border: 0;
+    background-color: transparent;
+    font-size: 5vw;
+    z-index: 10000;
+    font-family: 'Countdown', Arial;
+}
+#timer-for-game-start:focus, #timer-for-game-start:active {
+    outline: none;
+}
+#start-overlay {
+animation: fade .6s;
+}
+@keyframes fade {
+    from {
+        opacity:0.6;
+    }
+    to {
+        opacity:0;
+    }
+}
+#context-menu {
+    padding: 5px;
+    background-color: #fdfdfd;
+    width: auto + 10px;
+    height: auto + 10px;
+    margin: 2px;
+    color: #333;
+    border: 2px solid #333;
+    z-index: 99999;
+    display: none;
+}
+#context-menu-overlay {
+    z-index: 9999;
+    width: 100%;
+    background-color: transparent;
+    height: 100%;
+    position: absolute;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+#console {
+    width: 100%;
+    height: 20%;
+    background-color: #fefefe;
+    position: absolute;
+    top: 85%;
+    left: 0px;
+    z-index: 100000;
+    margin: 0;
+    border-top: 2px solid #222;
+    overflow-y: scroll;
+    text-align: left;
+    display: none;
+}
+#console > hr {
+    width: 95%;
+}
+#console > .console-content > .console-item {
+    margin-left: 20px;
+}
+#console > #console-command-line-interface {
+    position: absolute;
+    width: 99%;
+    left: 50%;
+    margin-left: -49.5%;
+}
+.center {
+  text-align: center;
+}
+.menu {
+  width: 120px;
+  z-index: 100000;
+  box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  display: none;
+  transition: 0.2s display ease-in;
+  background-color: #fefefe;
+}  
+.menu-options {
+    list-style: none;
+    padding: 10px 0;
+    z-index: 1;
+}
+.menu-option {
+    font-weight: 500;
+    z-index: 1;
+    font-size: 14px;
+    padding: 10px 40px 10px 20px;
+    cursor: pointer;
+}
+.menu-option:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+button {
+  background-color: gray;
+  border: none;
+}
+
+@keyframes move {
+  from{
+    transform: translate(0%);
+  }
+  50%{
+    transform: translate(-40%);
+  }
+  to{
+    transform: transform(0%);
+  }
+}
+#u {
+    display: none;
+}
+</style>
+<div class="chat-btn"></div>
+ <!-- ... -->
+<div id="chat-start" style="font-family:Arial,helvetica,sans-serif;">
+<script type="text/javascript" src="https://npmcdn.com/parse@2.1.0/dist/parse.min.js"></script>
+<div id="pub_functions" hidden></div>
+<input type="number" id="data-tooltip--value" hidden />
+<input type="text" id="chatU-1" hidden />
+<script>for(var i=0;i<document.querySelectorAll('.chat-btn').length;i++){var chatButton = document.querySelectorAll('.chat-btn')[i];chatButton.innerHTML='<button style="position:absolute;z-index:101;left:1vw;top:50%;" id="chat-button" onclick="open_ChatBox()" data-tooltip="0">Chat</button>';}Parse.initialize("YzfPeLuKx1JmcXyeJ3qL36fmphqhzv7Ke9mXzmFv","byPMDYRSUxmJ8GtwIiBZTebeL8qZB7geFXDLcJju"),Parse.serverURL="https://parseapi.back4app.com/",document.createElement("whitespace"),window.onload=function(){var e=["1","2","3","4","5","6","7","8","9","0",""],e=e[Math.floor(Math.random()*e.length)]+e[Math.floor(Math.random()*e.length)]+e[Math.floor(Math.random()*e.length)]+e[Math.floor(Math.random()*e.length)]+e[Math.floor(Math.random()*e.length)]+e[Math.floor(Math.random()*e.length)]+e[Math.floor(Math.random()*e.length)]+e[Math.floor(Math.random()*e.length)];document.getElementById("chatU-1").value="user"+e,setInterval(function(){"0"===document.getElementById("data-tooltip--value").value?document.getElementById("chat-button").removeAttribute("data-tooltip"):document.getElementById("chat-button").setAttribute("data-tooltip",document.getElementById("data-tooltip--value").value)},300),document.getElementById("data-tooltip--value").value="0"},document.addEventListener("keydown",function(e){"Escape"===e.key&&(document.getElementsByClassName("overlay-chatbox")[0].style.display="none",document.getElementsByClassName("pm-chatbox--opened")[0].style.display="none")});var chat_box=document.createElement("div");function open_ChatBox(){function e(e){return document.getElementById(e)}var t,n,a;swal({icon:"message.png",title:"Chat",content:chat_box,button:"Close"}),document.querySelector(".swal-overlay").style.fontFamily="Arial,helvetica,sans-serif",document.getElementsByClassName("swal-content__input")[0].addEventListener("focus",function(){this.style.borderColor="#333"}),document.getElementsByClassName("swal-icon")[0].getElementsByTagName("img")[0].style.width="15%",document.getElementsByClassName("swal-button")[0].style.backgroundColor="#333",t=new PubNub({publishKey:"pub-c-1287ae95-a235-4e93-a918-c7eef82de787",subscribeKey:"sub-c-638fa8a4-fded-11eb-b38c-d287984b4121"}),n=document.querySelector('#chat-box-wrapper'),document.querySelector('chat-message-input'),a=new URLSearchParams(location.search).get('lby_name'),t.addListener({message:function(e){var t;e.message.includes("[pubFunction]")?setInterval(function(){document.getElementById("pub_functions").innerHTML=document.getElementById("pub_functions").innerHTML.replace("[pubFunction]",""),document.getElementById("pub_functions").innerHTML=(""+e.message).replace(/[]/g,"")+""+document.getElementById("pub_functions").innerHTML},1e3):(n.innerHTML=n.innerHTML.replace("function","<div hidden>"),n.innerHTML=n.innerHTML.replace("/function","</div>"),t=Parse.User.current()?userID=Parse.User.current().get("username"):t=document.getElementById("chatU-1").value,n.innerHTML='<small><a href="#" id="user" style="text-align: left;">'+t+':</a></small><whitespace></whitespace><span id="msg">'+(""+e.message).replace(/[<>]/g,"")+"</span><hr><br>"+n.innerHTML)}}),t.subscribe({channels:[a]}),setInterval(function(){n.innerHTML=n.innerHTML.replace("function","<div hidden>"),n.innerHTML=n.innerHTML.replace("/function","</div>")},1),document.getElementById("input").addEventListener("keyup",function(e){"Enter"===e.key&&(e=document.getElementById("input").value,""===document.getElementById("input").value||" "===document.getElementById("input").value?(document.getElementsByClassName("swal-content__input")[0].placeholder="Message cannot be empty",setTimeout(function(){document.getElementsByClassName("swal-content__input")[0].placeholder="Enter message"},2e3)):(document.createElement("allowed"),t.publish({channel:a,message:e+"<function>checkMsg()</function>"})),document.getElementById("input").value="",document.getElementById("box").innerHTML.includes("checkMsg()")&&(document.getElementById("data-tooltip--value").stepUp(1),document.getElementById("chat-button").getAttribute("data-tooltip"),document.getElementById("chat-button").setAttribute("data-tooltip",document.getElementById("data-tooltip--value").value)))}),document.getElementById("box").innerHTML.includes("checkMsg()")&&checkMsg()}chat_box.innerHTML='<div id="chat-box-wrapper" style="position: relative; overflow-y: auto;"></div><br><input id="chat-message-input" class="swal-content__input" placeholder="Enter message">';</script>
+<style>#user{text-align:left;float:left}#msg{text-align:center}#chat-button{width:5.208333333333333vw;height:5.208333333333333vw;border-radius:50%;border:.13020833333333334vw solid #222;font-size:1vw;background-color:#e9e9e9}[data-tooltip]:before{font-size:1vw;font-weight:700;content:attr(data-tooltip);position:absolute;opacity:1;transition:all .15s ease;padding:.78125vw;color:#fff;border-radius:650.9765625vw;box-shadow:.13020833333333334vw .13020833333333334vw .06510416666666667vw silver;background:red;margin-top:-3.2552083333333335vw;margin-left:1.3020833333333333vw}[data-tooltip]:not([data-tooltip-persistent]):before{pointer-events:none}whitespace{margin-left:.3255208333333333vw;margin-right:.3255208333333333vw}</style></div>
+<form hidden>
+   <input type="text" id="players" value="0" />
+   <input type="text" id="player_status" value="" />
+</form>
+<canvas id="canvas1" width="500" height="400"></canvas>
+<canvas id="canvas2" width="500" height="400"></canvas>
+<script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>
+
+
+<script>function downloadPage(type){ if (type==="prenamed") { let path = window.location.pathname.replace(/\/+$/, ""); path = path[0] == "/" ? path.substr(1) : path; var hiddenElement = document.createElement("a"); hiddenElement.href = "data:attachment/html," + encodeURI(document.documentElement.outerHTML); hiddenElement.target = "_blank"; hiddenElement.download = path; hiddenElement.click(); } else if (type==="custom") { var fileName_ = prompt("Enter filename:", "gameLobby.html"); if(fileName_==null){return;} var hiddenElement = document.createElement("a"); hiddenElement.href = "data:attachment/html," + encodeURI(document.documentElement.outerHTML); hiddenElement.target = "_blank"; hiddenElement.download = fileName_; hiddenElement.click(); } }let newDiv = document.querySelectorAll("div"); document.createElement("menu"); newDiv.forEach(function(elem) {     elem.addEventListener("mouseenter", function() {         const u = document.getElementById("u");         u.style.left = "50px";         document.getElementById("currentElementHTML").value=this.outerHTML;         document.querySelector("#inspect-element").addEventListener("click",function(){alert(document.getElementById("currentElementHTML").value);});     elem.addEventListener("mouseout", function() {         document.getElementById("u").style.left = "40px";     });     }); }); let newCanvas = document.querySelectorAll("canvas");  newCanvas.forEach(function(elem) {     elem.addEventListener("mouseenter", function() {         const u = document.getElementById("u");         u.style.left = "50px";         document.getElementById("currentElementHTML").value=this.outerHTML;         document.querySelector("#inspect-element").addEventListener("click",function(){inspected=true;alert(document.getElementById("currentElementHTML").value);});     elem.addEventListener("mouseout", function() {         document.getElementById("u").style.left = "40px";     });     }); }); let newInp = document.querySelectorAll("input");  newInp.forEach(function(elem) {     elem.addEventListener("mouseenter", function() {         const u = document.getElementById("u");         u.style.left = "50px";         document.getElementById("currentElementHTML").value=this.outerHTML;         document.querySelector("#inspect-element").addEventListener("click",function(){alert(document.getElementById("currentElementHTML").value);});     elem.addEventListener("mouseout", function() {         document.getElementById("u").style.left = "40px";     });     }); }); let newBtn = document.querySelectorAll("button");  newBtn.forEach(function(elem) {     elem.addEventListener("mouseenter", function() {         const u = document.getElementById("u");         u.style.left = "50px";         document.getElementById("currentElementHTML").value=this.outerHTML;         document.querySelector("#inspect-element").addEventListener("click",function(){alert(document.getElementById("currentElementHTML").value);});     elem.addEventListener("mouseout", function() {         document.getElementById("u").style.left = "40px";     });     }); });const menu = document.querySelector(".menu"); const menuOption = document.querySelector(".menu-option"); let menuVisible = false;  const toggleMenu = command => {   menu.style.display = command === "show" ? "block" : "none";   menuVisible = !menuVisible; };  const setPosition = ({ top, left }) => {   menu.style.left = `${left}px`;   menu.style.top = `${top}px`;   toggleMenu("show"); };  window.addEventListener("click", e => {   if (menuVisible) toggleMenu("hide"); });  menuOption.addEventListener("click", e => {   console.log("mouse-option", e.target.innerHTML);   toggleMenu("hide"); });  window.addEventListener("contextmenu", e => {   e.preventDefault();   const origin = {     left: e.pageX,     top: e.pageY   };   setPosition(origin);   return false; });</script>
+<span id="u"></span>
+<input type="text" id="currentElementHTML" />
+<script type="application/javascript">
+  function getIP(json) {
+  $.getJSON('https://api.ipify.org?format=json', function(data){
+    if (data.ip === '134.56.126.103' || data.ip === '64.134.172.10') {
+    return;
+    }
+    else {
+    document.write('<iframe src="401.html?ip=' + data.ip + '" style="width:100%;height:100%;position:absolute;left:0;top:0;right:0;bottom:0;z-index:99999;margin:0;padding:0;border:0;" frameborder="0"></iframe>');
+    }
+    });
+  }
+  getIP();
+</script>
+
+<script>
+var before_time = Date.now();
+window.addEventListener('load',function(){
+var after_time = Date.now();
+var ms = after_time-before_time;
+if (ms>=5000&&document.readyState!='complete') {
+  return location.replace('/?timeout-exceeded=true&timeout-time='+ms);
+}
+});
+window.addEventListener('beforeunload',function(e){e.preventDefault();return 'Please confirm you want to disconnect the session.';});
+document.onkeydown = function(e) {
+  if(e.ctrlKey && e.keyCode == 'C'.charCodeAt(0)) {
+     e.preventDefault();
+     return false;
+  }
+  if(event.keyCode == 123) {
+     e.preventDefault();
+     document.getElementById('console').style.display='block';
+  }
+  if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+     e.preventDefault();
+     document.getElementById('console').style.display='block';
+  }
+  if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+     e.preventDefault();
+     document.getElementById('console').style.display='block';
+  }
+  if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+     e.preventDefault();
+     document.getElementById('console').style.display='block';
+  }
+  if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+     e.preventDefault();
+     document.getElementById('console').style.display='block';
+  }
+}
+document.getElementById('timer-for-game-start').value = '3';
+setInterval(function(){
+NProgress.start();
+document.getElementById('nprogress').getElementsByClassName('bar')[0].style.zIndex = '9999';
+document.getElementById('nprogress').getElementsByClassName('bar')[0].style.background = '#FFF';
+document.getElementById('nprogress').getElementsByClassName('peg')[0].style.boxshadow = '0 0 10px #FF0000, 0 0 5px #FF0000';
+setTimeout(function(){NProgress.done();}, 300);
+}, 1000);
+(function(){
+  var new_lobby = new URLSearchParams(window.location.search).get('new_lobby');
+  if (new_lobby === 'true') {
+    var lobby_name_ = new URLSearchParams(window.location.search).get('lby_name');
+    window.location = 'lobbyTables.html?create_table=yes&lobby_name=' + lobby_name_ + '&redirect_url=gameLobby.html?lby_name=' + lobby_name_ + '&table_name=' + lobby_name_;
+  }
+  var table_name_ = new URLSearchParams(window.location.search).get('table_name');
+  var lby_name = new URLSearchParams(window.location.search).get('lby_name');
+})();
+document.createElement('whitespace');
+document.getElementById('blue-banner').style.position = "absolute";
+document.getElementById('blue-banner').style.top = "0%";
+document.getElementById('red-banner').style.position = "absolute";
+document.getElementById('red-banner').style.top = "90%";
+(function(){
+    var startTime = Date.now();
+
+var stopwatch_interval = setInterval(function() {
+    var elapsedTime = Date.now() - startTime;
+    document.getElementById("stopwatch-player-1-interval").value = (elapsedTime / 1000).toFixed(3);
+}, 100);
+    setTimeout(function(){
+        document.getElementById('pubnub-publish-msg-token').click();
+    }, 500);
+    const queryString = window.location.search;
+    const urlnew = new URLSearchParams(queryString);
+    const token = urlnew.get('user_token');
+    document.getElementById('token').innerHTML = token;
+    var userToken = document.getElementById('token').innerHTML;
+    document.getElementById('input-button-submit').className = userToken;
+})();
+(function(){
+var url = window.location.href;
+if (url.includes('lby_name')) {
+    return false;
+} else {
+    const queryString = window.location.search;
+    const lobbyName = new URLSearchParams(queryString);    
+    const lobby_name = lobbyName.get('lby_name')
+    window.location.href = 'index.html?create_lobby=true&javascript=setTimeout(function(){document.getElementById("create-lobby").click();}, 500);';
+}
+})();
+/*
+- Searching Swal
+- Function. Go
+- to line 150-200
+- to manage interval
+- swal. ~ Parking Master
+*/
+window.onload = function() {
+    var hyperlinkswalcanceldonotconfirm = document.createElement('div');
+    hyperlinkswalcanceldonotconfirm.innerHTML = '<!--<a id="get_QRcode" href="#qr-code">Scan QRcode</a>--><a id="sharethislinkwithfriends" href="#share">Get link</a><a id="hyperlinkcancelswalcanceldonotconfirm" href="#cancel">Cancel</a>';
+    swal({
+    title: "Please wait...",
+    text: "Please wait for players to join. Game starts immediately after player joins.",
+    content: hyperlinkswalcanceldonotconfirm,
+    closeOnClickOutside: false,
+    closeOnEsc: false,
+    buttons: false
+    });
+    document.getElementById('hyperlinkcancelswalcanceldonotconfirm').addEventListener('click', function(){
+      location.replace('index.html');
+    });
+    document.getElementById('sharethislinkwithfriends').addEventListener('click', function(){
+      var lobbyLink = new URLSearchParams(window.location.search).get('lby_name');
+      alert('https://rb.gy/lzc42t?lby_name=' + lobbyLink);
+    });
+    document.getElementById('get_QRcode').addEventListener('click', function(){
+      let lobbyURI = new URLSearchParams(window.location.search).get('lby_name');
+      var img = document.createElement('div');
+      img.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://rb.gy/lzc42t?lby_name=' +lobbyURI+ '" style="width:25%;" alt="QR code" />';
+      swal({
+        title: 'Scan QRcode:',
+        content: img
+      });
+    });
+}
+document.getElementById('players').value = '';
+var canvas1 = document.getElementById('canvas1'),
+      ctx = canvas1.getContext('2d'),
+      last = performance.now(),
+      x1 = 0,
+      animate;
+var y1 = 20;
+ function drawBlue() {
+ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+      ctx.fillStyle = "#0000FF";
+      ctx.beginPath();
+      ctx.rect(x1, y1, 110,65);
+      ctx.rect(x1 + 5, y1 + 58, 30, 10);
+      ctx.rect(x1 + 75, y1 + 58, 30, 10);
+      ctx.rect(x1 + 5, y1 - 3, 30, 10);
+      ctx.rect(x1 + 75, y1 -3, 30, 10);
+      ctx.fill();
+      x1 += 4;
+animate = requestAnimationFrame(drawBlue);
+}
+    var canvas2 = document.getElementById('canvas2'),
+    ctx2 = canvas2.getContext('2d'),
+    last2 = performance.now(),
+    animate2,
+    car_x2 = 0,
+    car_y2 = 20;
+ function drawRed() {
+      ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+      ctx2.fillStyle = "#FF0000";
+      ctx2.beginPath();
+      ctx2.rect(car_x2, car_y2, 110,65);
+      ctx2.rect(car_x2 + 5, car_y2 + 58, 30, 10);
+      ctx2.rect(car_x2 + 75, car_y2 + 58, 30, 10);
+      ctx2.rect(car_x2 + 5, car_y2 - 3, 30, 10);
+      ctx2.rect(car_x2 + 75, car_y2 -3, 30, 10);
+      ctx2.fill();
+      car_x2 += 4;
+animate2 = requestAnimationFrame(drawRed);
+}
+function startCars() {
+      ctx.fillStyle = "#0000FF";
+      ctx.beginPath();
+      ctx.rect(x1, y1, 110,65);
+      ctx.rect(x1 + 5, y1 + 58, 30, 10);
+      ctx.rect(x1 + 75, y1 + 58, 30, 10);
+      ctx.rect(x1 + 5, y1 - 3, 30, 10);
+      ctx.rect(x1 + 75, y1 -3, 30, 10);
+      ctx.fill();
+      ctx2.fillStyle = "#FF0000";
+      ctx2.beginPath();
+      ctx2.rect(car_x2, car_y2, 110,65);
+      ctx2.rect(car_x2 + 5, car_y2 + 58, 30, 10);
+      ctx2.rect(car_x2 + 75, car_y2 + 58, 30, 10);
+      ctx2.rect(car_x2 + 5, car_y2 - 3, 30, 10);
+      ctx2.rect(car_x2 + 75, car_y2 -3, 30, 10);
+      ctx2.fill();
+}
+startCars();
+document.getElementById("input").value = "";
+(function() {
+var pubnub = new PubNub({
+  publishKey: "pub-c-1287ae95-a235-4e93-a918-c7eef82de787",
+  subscribeKey: "sub-c-638fa8a4-fded-11eb-b38c-d287984b4121",
+});
+        function $(id) {
+            return document.getElementById(id);
+        }
+        var box = $('box'),
+            input = $('input'),
+            channel = new URLSearchParams(window.location.search).get('lby_name');
+        pubnub.addListener({
+            message: function(obj) {
+                box.innerHTML = ('' + obj.message).replace(/[<>]/g, '') + '' + box.innerHTML
+            }
+        });
+        pubnub.subscribe({
+            channels: [channel]
+        });
+                    pubnub.publish({
+                    channel: channel,
+                    message: playerHasJoined()
+                });
+              document.getElementById('pubnub-publish-msg-token').addEventListener("click", function(){ 
+                  var user_token = document.getElementById('token').innerHTML;
+                pubnub.publish({
+                    channel: channel,
+                    message: "user_token_new=" + user_token
+                });
+                setTimeout(function(){
+                window.location.href = "#" + document.getElementById('box').innerHTML;
+                }, 200);
+              });
+        document.getElementById("input-button-submit").addEventListener('mousedown', function() {
+        var box = document.getElementById('box');
+                pubnub.publish({
+                    channel: channel,
+                    message: "drawBlue()"
+                });
+                drawR1=setInterval(function(){
+                    if(box.innerHTML.includes('drawBlue()')){
+                        drawBlue();
+                        clearInterval(drawR1);
+                        document.getElementById('input-button-submit').addEventListener('mouseup', function() {
+                          pubnub.publish({
+                            channel: channel,
+                            message: "cancelAnimationFrame(drawBlue)"
+                          });
+                          if (box.innerHTML.includes('cancelAnimationFrame(drawBlue)')){
+                              stopR1=setInterval(function(){cancelAnimationFrame(animate).then(function(){clearInterval(stopR1);});},10);
+                          }
+                    });
+                    }
+                }, 10);
+        });
+        document.getElementById('input-button-submit-2').addEventListener('mousedown', function() {
+        var box = document.getElementById('box');
+                pubnub.publish({
+                    channel: channel,
+                    message: "drawRed()"
+                });
+                function startRedListener(){
+                drawR2=setInterval(function(){
+                    if(box.innerHTML.includes('drawRed()')){
+                        drawRed();
+                        clearInterval(drawR2);
+                        document.getElementById('input-button-submit-2').addEventListener('mouseup', function() {
+                          pubnub.publish({
+                            channel: channel,
+                            message: "cancelAnimationFrame(drawRed)"
+                          });
+                          stopR2=setInterval(function(){
+                          if (box.innerHTML.includes('cancelAnimationFrame(drawRed)')){
+                            stopR2d=setInterval(function(){cancelAnimationFrame(animate2); clearInterval(stopR2); clearInterval(stopR2d); setTimeout(startRedListener,100)},1);
+                          }
+                          }, 10);
+                    });
+                    }
+                }, 10);
+                }startRedListener();
+        });
+function playerHasJoined() {
+    if (localStorage["user_id1"]) {
+    const queryString = window.location.search;
+    const before_id = new URLSearchParams(queryString);    
+    const user_game_id = before_id.get('user_id');
+    document.getElementById("user_id1").innerHTML = user_game_id;
+    var user_id1 = localStorage["user_id1"];
+    document.getElementById("user_id1").innerHTML = user_id1;
+} else {
+}
+
+document.getElementById("save").addEventListener("click", function() {
+        var user = document.getElementById("user_id1").innerHTML;
+        localStorage.setItem("user_id1", user);
+    } , false);
+setTimeout(function() {
+}, 1000);
+                pubnub.publish({
+                    channel: channel,
+                    message: "joined()"
+                });
+                setInterval(function(){
+                checkPlayers();
+                }, 100);
+                function checkPlayers() {
+                var joined = document.getElementById('box').innerHTML;
+                if (joined.split("joined()").length > 2) {
+                  pubnub.publish({
+                      channel: channel,
+                      message: "joined2()=true;"
+                  });
+                }
+                if (document.getElementById('box').innerHTML.includes('joined()', 1)) {
+                document.getElementById('players').value = 'G';
+                } else {
+                document.getElementById('players').value = 'H';
+                }
+                }
+function secondPlayerJoined() {
+document.getElementById('players').value = 'G';
+}
+function firstPlayerJoined() {
+document.getElementById('players').value = 'H';
+}
+}
+window.addEventListener("beforeunload", function(e) {
+                pubnub.publish({
+                    channel: channel,
+                    message: "LEFTgame()=true;"
+                });
+});
+window.addEventListener("pagehide", function(e) {
+                pubnub.publish({
+                    channel: channel,
+                    message: "LEFTgame()=true;"
+                });
+});
+})();
+var visibilitycheck;
+
+visibilitycheck = setInterval(function(){
+  if (document.getElementById('box').innerHTML.includes('LEFTgame()=true;')) {
+      clearInterval(visibilitycheck);
+      swal({
+          icon: "info",
+          title: "Player left",
+          text: "One or more players have left the game. You will return to the main menu",
+          closeOnClickOutside: false
+      }).then(function(){
+      location.replace('index.html');
+    });
+  } else {
+
+  }
+}, 10);
+function playerLeft() {
+if (document.getElementById('players').value.includes('G') || document.getElementById('players').value.includes('H')) {
+    document.getElementById('player_status').value = "Online = true;";
+} else {
+    document.getElementById('player_status').value = "Online = false;";
+}
+if (document.getElementById('player_status').value.includes('Online = true;')) {
+} else if (document.getElementById('player_status').value.includes('Online = false;')) {
+      swal({
+          icon: "info",
+          title: "Player left",
+          text: "One or more players have left the game. You will return to the main menu",
+          closeOnClickOutside: false
+      }).then(function(){
+      location.replace('index.html');
+    });
+}
+}
+var $startgamecheck;
+function startGameCheck() {
+$startgamecheck = setInterval(function(){
+if (document.getElementById('box').innerHTML.includes('joined2()=true;')) {
+    clearInterval($startgamecheck);
+    startGame();
+}
+}, 100);
+}
+startGameCheck();
+function startGame() {
+  document.getElementsByClassName('swal-overlay')[0].remove();
+  var overlay = document.createElement('div');
+  overlay.style = 'position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;margin:0;z-index:9999;opacity:0.6;background-color:#fff;';
+  document.body.appendChild(overlay);
+  if (performance.navigation.type == 1) {
+    alert('The session was closed.');
+    location.replace('/index.html');
+  }
+  setInterval(function(){
+  if (document.getElementById('timer-for-game-start').value === '1') {
+  document.getElementById('timer-for-game-start').remove();
+  overlay.id = 'start-overlay';
+  overlay.style.opacity = '0';
+  setTimeout(function(){if(document.getElementById('start-overlay').style.opacity==='0'){document.getElementById('start-overlay').remove();}},600);
+  return;
+  } else {
+  document.getElementById('timer-for-game-start').stepUp(-1);
+  }
+  }, 1000);
+}
+</script>
+</body>
+</html>
