@@ -1,0 +1,52 @@
+<!--
+> Copyright (c) 2021 Parking Master
+> All rights reserved.
+> LICENSE MIT https://github.com/Parking-Master/Parking-Master/blob/main/LICENSE.md
+-->
+<!DOCTYPE html>
+<html oncontextmenu="return false;" lang="en">
+<head>
+    <title>Parking Master LVL. 1</title>
+    <meta http-equiv="content-type" content="text/html">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <link rel="icon" href="">
+    <link id="level_styles_new" rel="stylesheet" href="styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+<!--<img id="newImgVid1f" style="position: absolute;" width="200" hidden />-->
+<div id="steering"></div>
+<button id="auto_click_donot" hidden></button>
+<input type="text" id="transform_rotation_over100" value="" hidden />
+  <h3 id="header-style">Parking Master</h3>
+<div unselectable="on">
+<canvas id="canvas" style="width: 39.0625vw; height: 26.041666666666668vw;border:0.2604166666666667vw solid #000;"></canvas>
+</div>
+<p id="pause"></p>
+<div id="hidebuttons">
+<audio id="myAudio" loop><source src="https://user-images.githubusercontent.com/85320577/124203140-09e17c80-daaa-11eb-88e9-9066a6def61c.mov"></audio>
+<audio volume="0.1" id="myAudio2" src="https://user-images.githubusercontent.com/85320577/125540240-79f88ae6-6c2c-4b92-baf7-4d3b24da010b.mov"></audio>
+</div>
+<audio volume="1" id="crash-effect" src="https://user-images.githubusercontent.com/85320577/125838045-3059b984-e351-41df-853b-c320a07c4f5e.mov"></audio>
+<audio src="https://user-images.githubusercontent.com/85320577/124203140-09e17c80-daaa-11eb-88e9-9066a6def61c.mov" id="car_move"></audio>
+<!-- Status Bar -->
+<div id="status-button-bar">
+<div id="shift_box"><div id="knob"><button class="buttonPark" onclick="parkDetector()"></button></div><div id="parking_symbols_shifter" style="width: 0.1953125vw; font-size: 0.6510416666666666vw; font-family: Arial !important; position: relative; z-index: 0; top: -1.3020833333333333vw;"><p>P</p><p>R</p><p>D</p></div></div>
+<div id="pedals"><div id="drive_pedal"></div><div id="brake_pedal"></div>
+<input type="text" id="shift_value" value="Park" hidden />
+<input type="text" id="current_gear" value="" hidden />
+<div id="speedstatus"><span id="speedbar">0</span><span> MPH</span><hr></div>
+</div>
+</div>
+<script>
+function resetStyle() {
+  document.write('<iframe style="position: absolute; left: 0; top: 0; bottom: 0; right: 0;border: none; width: 100%; height: 100%; margin: 0; padding: 0;" src="https://pkngmstr-history.w3spaces.com/lvl1-preview--8-23-21.html"></iframe>');
+}
+</script>
+    <script src="https://external-testing-3.w3spaces.com/-steering--shifter.js"></script>
+    <script src="scripts.js"></script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/Parking-Master/Security.js/security.js'></script>
+    </body>
+</html>
